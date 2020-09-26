@@ -1,4 +1,5 @@
-/Examples/png/
-/Examples/pdf/
-/Examples/txt/
-
+.pseudopython
+__pycache__
+*.pyc
+*.egg-info
+/build

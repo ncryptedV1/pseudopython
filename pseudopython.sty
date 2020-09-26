@@ -10,7 +10,7 @@
 % chktex-file 8
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{py2tex}[09/05/2019 v0.0 Macros for py2tex]
+\ProvidesPackage{pseudopython}[26/09/2020 v0.1 Macros for pseudopython]
 
                            %~~~~~New commands~~~~~%
 
@@ -42,6 +42,8 @@
 %\algrenewcommand\algorithmicuntil{{\textbf{finchè}}}
 %\algrenewcommand\algorithmicreturn{\State{{\textbf{restituisci}}}}
 
+\algrenewcommand\algorithmicrequire{\textbs{Input:}}
+\algrenewcommand\algorithmicensure{\textbs{Output:}}
 \algrenewcommand\algorithmicprocedure{{\textbs{procedure}}}
 \algrenewcommand\algorithmicfunction{{\textbs{function}}}
 \algrenewcommand\algorithmicif{{\textbs{if}}}
@@ -63,66 +65,74 @@
 [1]{Until (#1)}
 
                            %~~~~~Operators~~~~~%
-\newcommand{\PyAdd}[0]{+}
+\newcommand{\PyAdd}[2]{{#1} $+$ {#2}}
 \newcommand{\PyAnd}[0]{\textsf{ and }}
 \newcommand{\PyAnnotation}[2]{\ensuremath{\textbs{variable }#1\colon \texttt{#2}}}
-\newcommand{\PyArg}[1]{\texttt{#1}}
-\newcommand{\PyArgAnnotation}[2]{\ensuremath{\texttt{#1} \colon \texttt{#2}}}
+\newcommand{\PyArg}[1]{\ensuremath{#1}}
+\newcommand{\PyArgAnnotation}[2]{\ensuremath{{#1} \colon {#2}}}
 \newcommand{\PyArgSep}[0]{,~}
-\newcommand{\PyAssign}[2]{\ensuremath{#1 \gets #2}}
+\newcommand{\PyAssign}[2]{{#1} {$\gets$} {#2}}
 \newcommand{\PyAssignSep}[0]{,~}
 
-\newcommand{\PyCall}[2]{
-	\ifnum\pdfstrcmp{#1}{print}=0
-  	\textbs{output~} { \tt#2} 
-	\else
-		\textsc{#1}( {\tt#2} )
-	\fi
+% This worked poorly for me
+\iffalse
+\newcommand{\PyCall}[2]{%
+  \ifnum\pdfstrcmp{#1}{print}=0%
+    \textbs{output~} {#2} 
+  \else%
+    \textsc{#1}({#2})%
+  \fi%
 }
+\else
+\newcommand{\PyCall}[2]{\textsc{#1}({#2})}
+\fi
 \newcommand{\PyCallSep}[0]{,~}
 
-\newcommand{\PyDiv}[0]{\mathop{\texttt{/}}}
+\newcommand{\PyDiv}[0]{\div}
 
 \newcommand{\PyEq}[0]{=}
-\newcommand{\PyExpr}[1]{\ensuremath{#1}}
+\newcommand{\PyExpr}[1]{#1}
 
 \newcommand{\PyFalse}[0]{\texttt{false}}
 
 \newcommand{\PyGt}[0]{>}
 \newcommand{\PyGtE}[0]{\ge}
 
-%\newcommand{\PyIn}[0]{}
+\newcommand{\PyIn}[0]{$\in$}
 %\newcommand{\PyIs}[0]{}
 %\newcommand{\PyIsNot}[0]{}
 
+\newcommand{\PyTuple}[1]{(#1)}
 \newcommand{\PyList}[1]{[#1]}
-\newcommand{\PyListSep}[0]{, }
+
 \newcommand{\PyLt}[0]{<}
 \newcommand{\PyLtE}[0]{\le}
 
-\newcommand{\PyMod}[0]{\mathop{\textsc{mod}}}
-\newcommand{\PyMult}[0]{\times}
+\newcommand{\PyMod}[2]{\ensuremath{#1 \mathop{\textsc{mod}} #2}}
+\newcommand{\PyMult}[2]{\ensuremath{#1 \cdot #2}}
 
-\newcommand{\PyOr}[0]{\textsf{ or }}
+\newcommand{\PyOr}[2]{\textsf{ or }}
 
-\newcommand{\PyName}[1]{\texttt{#1}}
+\newcommand{\PyName}[1]{\ensuremath{#1}}
 %\newcommand{\PyNone}[0]{\textt{}}
-\newcommand{\PyNot}[1]{\texttt{!}#1}
+\newcommand{\PyNot}[1]{\neg{}#1}
 \newcommand{\PyNotEq}[0]{\neq}
 %\newcommand{\PyNotIn}[0]{}
-\newcommand{\PyNum}[1]{\texttt{#1}}
+\newcommand{\PyNum}[1]{{#1}}
 
 \newcommand{\PyPar}[1]{\left ( #1 \right )}
 \newcommand{\PyPow}[0]{\texttt{^}}
 
-\newcommand{\PyStr}[1]{\texttt{``#1''}}
-\newcommand{\PySub}[0]{-}
-\newcommand{\PySubscript}[2]{#1[#2]}
+\newcommand{\PyStr}[1]{\texttt{"#1"}}
+\newcommand{\PySub}[2]{{#1} $-$ {#2}}
+\newcommand{\PySubscript}[2]{\ensuremath{{#1}_{#2}}}
 
 \newcommand{\PyTrue}[0]{\texttt{true}}
 
-\newcommand{\PyUAdd}[1]{+ #1}
-\newcommand{\PyUSub}[1]{- #1}
+\newcommand{\PyUAdd}[1]{+#1}
+\newcommand{\PyUSub}[1]{-#1}
 
 
+\newcommand{\PyFor}[4]{\For{\PyAssign{#1}{#2 to #3}}}
+\newcommand{\PyEndFor}[0]{\EndFor}
 
