@@ -1,3 +1,4 @@
+import os
 import sys
 import ast
 import argparse
@@ -110,12 +111,17 @@ class Visitor(ast.NodeVisitor):
 
     def handle_magic_string(self, s: str):
         if s.startswith('!tex'):
-            for l in s[4:].splitlines():
+            for l in s[4:].strip().splitlines():
                 self.line(l)
+        elif s.startswith('!line'):
+            for l in s[5:].strip().splitlines():
+                self.line(r'\State{' + l + '}')
         elif s == '!show':
             self._emit_tex = True
         elif s == '!hide':
             self._emit_tex = False
+        elif s == '\n':
+            self.line(r'\newline')
         else:
             self.line(r'\Comment{' + s + '}')
 
@@ -146,27 +152,35 @@ class Visitor(ast.NodeVisitor):
         if not self._emit_tex:
             return
 
-        assert isinstance(node.iter, ast.Call)
-        assert isinstance(node.iter.func, ast.Name)
-        assert node.iter.func.id == 'range'
+        assert isinstance(node.iter, ast.Call) or isinstance(
+            node.iter, ast.Name)
+        if isinstance(node.iter, ast.Call):
+            assert isinstance(node.iter.func, ast.Name)
+            assert node.iter.func.id == 'range'
 
-        nargs = len(node.iter.args)
-        args = map(self.visit, node.iter.args)
-        assert 1 <= nargs <= 3
-        if nargs == 1:
-            start = r'\PyNum{0}'
-            [stop] = args
-            step = r'\PyNum{1}'
-        if nargs == 2:
-            [start, stop] = args
-            step = r'\PyNum{1}'
-        if nargs == 3:
-            [start, stop, step] = args
+            nargs = len(node.iter.args)
+            args = map(self.visit, node.iter.args)
+            assert 1 <= nargs <= 3
+            if nargs == 1:
+                start = r'\PyNum{0}'
+                [stop] = args
+                step = r'\PyNum{1}'
+            if nargs == 2:
+                [start, stop] = args
+                step = r'\PyNum{1}'
+            if nargs == 3:
+                [start, stop, step] = args
 
-        variable = self.visit(node.target)
+            variable = self.visit(node.target)
 
-        self.line(
-            r'\PyFor' + ''.join('{' + x + '}' for x in [variable, start, stop, step]))
+            self.line(
+                r'\PyFor' + ''.join('{' + x + '}' for x in [variable, start, stop, step]))
+        elif isinstance(node.iter, ast.Name):
+            variable = self.visit(node.target)
+            parent_variable = self.visit(node.iter)
+
+            self.line(r'\PyForIn' +
+                      ''.join('{' + x + '}' for x in [variable, parent_variable]))
         self.body(node.body)
         if node.orelse:
             self.line(r'\PyForElse')
@@ -326,8 +340,9 @@ def run(args):
         with open(path.join(out_path, 'pseudopython.tex'), 'w') as f:
             f.write(preamble(str(vis)))
         texinputs = ':'.join(['.', path.dirname(__file__), ''])
-        cmd = ['/usr/bin/pdflatex', '-halt-on-error', 'pseudopython.tex', '-pdf']
-        check_call(cmd, cwd=out_path, env={'TEXINPUTS': texinputs})
+        os.environ['TEXINPUTS'] = texinputs
+        cmd = ['pdflatex', '-halt-on-error', 'pseudopython.tex']
+        check_call(cmd, cwd=out_path)
         print('pdflatex build finished in', out_path)
 
     print()

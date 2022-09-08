@@ -88,15 +88,15 @@
 \fi
 \newcommand{\PyCallSep}[0]{,~}
 
-\newcommand{\PyDiv}[0]{\div}
+\newcommand{\PyDiv}[2]{#1 $\div$ #2}
 
 \newcommand{\PyEq}[0]{=}
 \newcommand{\PyExpr}[1]{#1}
 
 \newcommand{\PyFalse}[0]{\texttt{false}}
 
-\newcommand{\PyGt}[0]{>}
-\newcommand{\PyGtE}[0]{\ge}
+\newcommand{\PyGt}[0]{$>$}
+\newcommand{\PyGtE}[0]{$\ge$}
 
 \newcommand{\PyIn}[0]{$\in$}
 %\newcommand{\PyIs}[0]{}
@@ -105,18 +105,18 @@
 \newcommand{\PyTuple}[1]{(#1)}
 \newcommand{\PyList}[1]{[#1]}
 
-\newcommand{\PyLt}[0]{<}
-\newcommand{\PyLtE}[0]{\le}
+\newcommand{\PyLt}[0]{$<$}
+\newcommand{\PyLtE}[0]{$\le$}
 
 \newcommand{\PyMod}[2]{\ensuremath{#1 \mathop{\textsc{mod}} #2}}
 \newcommand{\PyMult}[2]{\ensuremath{#1 \cdot #2}}
 
-\newcommand{\PyOr}[2]{\textsf{ or }}
+\newcommand{\PyOr}[0]{\textsf{or}}
 
 \newcommand{\PyName}[1]{\ensuremath{#1}}
 %\newcommand{\PyNone}[0]{\textt{}}
-\newcommand{\PyNot}[1]{\neg{}#1}
-\newcommand{\PyNotEq}[0]{\neq}
+\newcommand{\PyNot}[1]{$\neg{}#1$}
+\newcommand{\PyNotEq}[0]{$\neq$}
 %\newcommand{\PyNotIn}[0]{}
 \newcommand{\PyNum}[1]{{#1}}
 
@@ -133,6 +133,7 @@
 \newcommand{\PyUSub}[1]{-#1}
 
 
-\newcommand{\PyFor}[4]{\For{\PyAssign{#1}{#2 to #3}}}
+\newcommand{\PyFor}[4]{\For{\PyAssign{#1}{#2 \textsf{to} #3}}}
+\newcommand{\PyForIn}[2]{\For{#1 \textsf{in} #2}}
 \newcommand{\PyEndFor}[0]{\EndFor}
 
